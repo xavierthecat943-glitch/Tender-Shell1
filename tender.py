@@ -11,6 +11,8 @@ from input_handler import TenderInput
 
 def main():
     setup_completion()
+    history = CommandHistory()
+terminal_input = TenderInput(history)
 
     print(f"Welcome to {TENDER_NAME} Shell!")
 
