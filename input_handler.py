@@ -2,7 +2,6 @@
 
 import readline
 
-from history import CommandHistory
 from suggestions import SuggestionEngine
 
 
@@ -11,7 +10,19 @@ class TenderInput:
         self.history = history
         self.suggestions = SuggestionEngine(history)
 
-    def get_input(self, prompt):
-        """Get input from the user."""
+        self._setup_readline()
 
-        return input(prompt)
+    def _setup_readline(self):
+        """Configure readline for command history."""
+
+        readline.parse_and_bind("set enable-keypad on")
+
+    def get_input(self, prompt):
+        """Get input from the user and save it to Tender history."""
+
+        command = input(prompt)
+
+        if command.strip():
+            self.history.add(command)
+
+        return command
