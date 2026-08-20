@@ -1,3 +1,5 @@
+import os
+
 from config import TENDER_NAME, PROMPT_USER, PROMPT_SYMBOL
 from parser import parse_input
 from conversation import respond
@@ -9,15 +11,29 @@ def clear_screen():
     print("\033[2J\033[H", end="")
 
 
+def get_prompt():
+    """Create Tender's dynamic shell prompt."""
+
+    home = os.path.expanduser("~")
+    current = os.getcwd()
+
+    if current == home:
+        display_path = "~"
+    elif current.startswith(home + os.sep):
+        display_path = "~" + current[len(home):]
+    else:
+        display_path = current
+
+    return f"{PROMPT_USER}@home {display_path} {PROMPT_SYMBOL} "
+
+
 def main():
     print(f"Welcome to {TENDER_NAME} Shell!")
     print("Type 'help' for help or 'exit' to leave.\n")
 
     while True:
         try:
-            user_input = input(
-                f"{PROMPT_USER}@home ~ {PROMPT_SYMBOL} "
-            )
+            user_input = input(get_prompt())
 
             parsed = parse_input(user_input)
 
@@ -47,7 +63,17 @@ def main():
                     print(f"{TENDER_NAME}: I don't know that command yet.")
 
             elif parsed["type"] == "linux":
-                execute(parsed["command"])
+                command = parsed["command"].strip()
+
+                if command == "cd":
+                    change_directory("~")
+
+                elif command.startswith("cd "):
+                    path = command[3:].strip()
+                    change_directory(path)
+
+                else:
+                    execute(command)
 
         except KeyboardInterrupt:
             print("\nTender: Use 'exit' to leave.")
