@@ -43,7 +43,7 @@ def main():
 
     while True:
         try:
-            user_input = input(get_prompt())
+            user_input = terminal_input.get_input(get_prompt())
 
             parsed = parse_input(user_input)
 
