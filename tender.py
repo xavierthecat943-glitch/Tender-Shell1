@@ -1,7 +1,7 @@
 from config import TENDER_NAME, PROMPT_USER, PROMPT_SYMBOL
 from parser import parse_input
 from conversation import respond
-from executor import execute
+from executor import execute, change_directory
 from commands import show_help, show_about
 
 
