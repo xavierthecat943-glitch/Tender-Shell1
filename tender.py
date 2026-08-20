@@ -9,13 +9,6 @@ from completion import setup_completion
 from history import CommandHistory
 from input_handler import TenderInput
 
-def main():
-    setup_completion()
-    history = CommandHistory()
-terminal_input = TenderInput(history)
-
-    print(f"Welcome to {TENDER_NAME} Shell!")
-
 
 def clear_screen():
     print("\033[2J\033[H", end="")
@@ -38,6 +31,12 @@ def get_prompt():
 
 
 def main():
+    # Set up Tender's systems
+    setup_completion()
+
+    history = CommandHistory()
+    terminal_input = TenderInput(history)
+
     print(f"Welcome to {TENDER_NAME} Shell!")
     print("Type 'help' for help or 'exit' to leave.\n")
 
@@ -50,9 +49,14 @@ def main():
             if parsed["type"] == "empty":
                 continue
 
+            # Conversational input
             if parsed["type"] == "conversation":
-                print(f"{TENDER_NAME}: {respond(parsed['command'])}")
+                print(
+                    f"{TENDER_NAME}: "
+                    f"{respond(parsed['command'])}"
+                )
 
+            # Tender's own commands
             elif parsed["type"] == "tender":
                 command = parsed["command"]
 
@@ -70,8 +74,12 @@ def main():
                     clear_screen()
 
                 else:
-                    print(f"{TENDER_NAME}: I don't know that command yet.")
+                    print(
+                        f"{TENDER_NAME}: "
+                        f"I don't know that command yet."
+                    )
 
+            # Normal Linux commands
             elif parsed["type"] == "linux":
                 command = parsed["command"].strip()
 
