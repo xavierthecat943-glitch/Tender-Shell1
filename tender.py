@@ -5,6 +5,12 @@ from parser import parse_input
 from conversation import respond
 from executor import execute, change_directory
 from commands import show_help, show_about
+from completion import setup_completion
+
+def main():
+    setup_completion()
+
+    print(f"Welcome to {TENDER_NAME} Shell!")
 
 
 def clear_screen():
