@@ -6,6 +6,8 @@ from conversation import respond
 from executor import execute, change_directory
 from commands import show_help, show_about
 from completion import setup_completion
+from history import CommandHistory
+from input_handler import TenderInput
 
 def main():
     setup_completion()
