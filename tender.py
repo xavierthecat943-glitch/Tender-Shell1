@@ -1,29 +1,57 @@
-import subprocess
+from config import TENDER_NAME, PROMPT_USER, PROMPT_SYMBOL
+from parser import parse_input
+from conversation import respond
+from executor import execute
+from commands import show_help, show_about
+
+
+def clear_screen():
+    print("\033[2J\033[H", end="")
 
 
 def main():
-    print("Welcome to Tender Shell!")
-    print("Type 'exit' to leave.\n")
+    print(f"Welcome to {TENDER_NAME} Shell!")
+    print("Type 'help' for help or 'exit' to leave.\n")
 
     while True:
         try:
-            command = input("tender@home ~ $ ")
+            user_input = input(
+                f"{PROMPT_USER}@home ~ {PROMPT_SYMBOL} "
+            )
 
-            if command == "exit":
-                print("Goodbye! 👋")
-                break
+            parsed = parse_input(user_input)
 
-            if not command.strip():
+            if parsed["type"] == "empty":
                 continue
 
-            if command.lower() in ["hello", "hi", "hey"]:
-                print("Tender: Hey! 👋")
-                continue
+            if parsed["type"] == "conversation":
+                print(f"{TENDER_NAME}: {respond(parsed['command'])}")
 
-            subprocess.run(command, shell=True)
+            elif parsed["type"] == "tender":
+                command = parsed["command"]
+
+                if command == "exit":
+                    print("Goodbye! 👋")
+                    break
+
+                elif command == "help":
+                    show_help()
+
+                elif command == "about":
+                    show_about()
+
+                elif command == "clear":
+                    clear_screen()
+
+                else:
+                    print(f"{TENDER_NAME}: I don't know that command yet.")
+
+            elif parsed["type"] == "linux":
+                execute(parsed["command"])
 
         except KeyboardInterrupt:
             print("\nTender: Use 'exit' to leave.")
+
         except EOFError:
             print("\nGoodbye! 👋")
             break
